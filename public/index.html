@@ -18,9 +18,9 @@
                     <a href="register.html">Rejestracja</a>
                 </div>
                 <div id="user-info" class="user-info">
+                    <a id="username">Użytkownik</a>
                     <span id="user-points" class="points">0 punktów</span>
-                    <span id="username">Użytkownik</span>
-                    <button id="logout-btn" class="logout-btn">Wyloguj</button>
+                    <a id="logout-btn" class="logout-btn">Wyloguj</a>
                 </div>
             </div>
         </nav>
@@ -69,39 +69,42 @@
         <p>&copy; 2025 Krupnik.pl Wszystkie prawa zastrzeżone.</p>
     </footer>
 
+    <script src="/js/auth.js"></script>
     <script>
-        // Sprawdź, czy użytkownik jest zalogowany
-        document.addEventListener('DOMContentLoaded', function() {
-            const userData = localStorage.getItem('user');
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const isValid = await verifyToken();
+            
+            if (!isValid) {
+                logout();
+            }
+            
+            const isLoggedIn = isAuthenticated();
             const gameButtons = document.querySelectorAll('.game-card .btn');
             
-            if (userData) {
-                // Użytkownik zalogowany
-                const user = JSON.parse(userData);
+            if (isLoggedIn) {
+                const userData = await updateUserData() || getUser();
+                
                 document.getElementById('auth-links').style.display = 'none';
                 document.getElementById('user-info').style.display = 'block';
-                document.getElementById('username').textContent = user.username;
-                document.getElementById('user-points').textContent = user.points + ' punktów';
+                document.getElementById('username').textContent = userData.username;
+                document.getElementById('user-points').textContent = userData.points + ' punktów';
                 document.getElementById('hero-buttons').style.display = 'none';
                 
-                // Umożliw granie
                 gameButtons.forEach(button => {
                     button.classList.remove('disabled');
                 });
             } else {
-                // Użytkownik niezalogowany
                 document.getElementById('auth-links').style.display = 'block';
                 document.getElementById('user-info').style.display = 'none';
                 
-                // Przekieruj na logowanie przy próbie gry
                 gameButtons.forEach(button => {
                     button.href = 'login.html';
                 });
             }
             
-            // Obsługa wylogowania
             document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.removeItem('user');
+                logout();
                 window.location.reload();
             });
         });

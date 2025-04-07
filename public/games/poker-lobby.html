@@ -13,13 +13,13 @@
             <div class="nav-links">
                 <a href="../index.html">Start</a>
                 <div id="auth-links">
-                    <a href="../login.html">Logowanie</a>
-                    <a href="../register.html">Rejestracja</a>
+                    <a href="login.html">Logowanie</a>
+                    <a href="register.html">Rejestracja</a>
                 </div>
                 <div id="user-info" class="user-info">
+                    <a id="username">Użytkownik</a>
                     <span id="user-points" class="points">0 punktów</span>
-                    <span id="username">Użytkownik</span>
-                    <button id="logout-btn" class="logout-btn">Wyloguj</button>
+                    <a id="logout-btn" class="logout-btn">Wyloguj</a>
                 </div>
             </div>
         </nav>
@@ -46,7 +46,7 @@
                     </tr>
                 </thead>
                 <tbody id="lobby-table-body">
-                    <!-- Tutaj będą wstawiane dane z API -->
+
                 </tbody>
             </table>
             <div id="no-lobbies-message" style="display: none;">
@@ -55,7 +55,6 @@
         </div>
     </main>
 
-    <!-- Modal tworzenia lobby -->
     <div id="create-lobby-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -116,47 +115,41 @@
     <footer>
         <p>&copy; 2025 Krupnik.pl Wszystkie prawa zastrzeżone.</p>
     </footer>
-
+    <script src="/js/auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Sprawdź, czy użytkownik jest zalogowany
-            const userData = localStorage.getItem('user');
-            if (!userData) {
-                // Jeśli nie jest zalogowany, przekieruj na stronę logowania
-                window.location.href = 'login.html';
+        document.addEventListener('DOMContentLoaded', async function() {
+            const isValid = await verifyToken();
+            
+            if (!isValid || !isAuthenticated()) {
+                window.location.href = '/login.html';
                 return;
             }
             
-            const user = JSON.parse(userData);
+            const userData = await updateUserData() || getUser();
+            
             document.getElementById('auth-links').style.display = 'none';
             document.getElementById('user-info').style.display = 'block';
-            document.getElementById('username').textContent = user.username;
-            document.getElementById('user-points').textContent = user.points + ' punktów';
+            document.getElementById('username').textContent = userData.username;
+            document.getElementById('user-points').textContent = userData.points + ' punktów';
             
-            // Pobranie lobby pokerowych
             fetchPokerLobbies();
             
-            // Obsługa przycisku odświeżania
             document.getElementById('refresh-btn').addEventListener('click', fetchPokerLobbies);
             
-            // Obsługa przycisku tworzenia lobby
             document.getElementById('create-lobby-btn').addEventListener('click', function() {
                 document.getElementById('create-lobby-modal').style.display = 'block';
             });
             
-            // Obsługa zamykania modalu
             document.querySelector('.close').addEventListener('click', function() {
                 document.getElementById('create-lobby-modal').style.display = 'none';
             });
             
-            // Zamykanie modalu po kliknięciu poza nim
             window.addEventListener('click', function(event) {
                 if (event.target == document.getElementById('create-lobby-modal')) {
                     document.getElementById('create-lobby-modal').style.display = 'none';
                 }
             });
             
-            // Obsługa checkboxa prywatnego lobby
             document.getElementById('is-private').addEventListener('change', function() {
                 document.getElementById('password-field').style.display = this.checked ? 'block' : 'none';
                 if (!this.checked) {
@@ -164,7 +157,6 @@
                 }
             });
             
-            // Obsługa formularza tworzenia lobby
             document.getElementById('create-lobby-form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
@@ -179,20 +171,15 @@
                     }
                 });
                 
-                // Dodaj ID twórcy
-                lobbyData.utworzony_przez = user.id;
-                
                 createPokerLobby(lobbyData);
             });
             
-            // Obsługa wylogowania
             document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.removeItem('user');
-                window.location.href = 'index.html';
+                logout();
+                window.location.href = '/index.html';
             });
         });
-        
-        // Funkcja pobierająca listę lobby pokerowych z API
+
         function fetchPokerLobbies() {
             fetch('http://localhost:5000/api/tables/poker')
                 .then(response => response.json())
@@ -205,8 +192,7 @@
                     document.getElementById('poker-lobbies').style.display = 'none';
                 });
         }
-        
-        // Funkcja aktualizująca tabelę z lobby
+
         function updateLobbyTable(lobbies) {
             const tableBody = document.getElementById('lobby-table-body');
             tableBody.innerHTML = '';
@@ -223,9 +209,7 @@
             lobbies.forEach(lobby => {
                 const row = document.createElement('tr');
                 
-                // Pobierz liczbę graczy przy stole (to byłoby pobierane z API)
-                // W tym przypadku symulujemy to
-                const currentPlayers = Math.floor(Math.random() * (lobby.max_graczy + 1));
+                const currentPlayers = lobby.current_players || 0;
                 
                 row.innerHTML = `
                     <td>${lobby.nazwa}</td>
@@ -241,204 +225,71 @@
                 tableBody.appendChild(row);
             });
             
-            // Dodajemy obsługę przycisków dołączania do lobby
-            // (nie implementujemy faktycznego dołączania zgodnie z poleceniem)
             document.querySelectorAll('.join-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const lobbyId = this.getAttribute('data-id');
-                    alert('Funkcja dołączania do lobby nie jest jeszcze zaimplementowana. ID lobby: ' + lobbyId);
+                    joinPokerTable(lobbyId);
                 });
             });
         }
-        
-        // Funkcja tworząca nowe lobby pokerowe
+
         function createPokerLobby(lobbyData) {
-            fetch('http://localhost:5000/api/tables/poker', {
+            fetchWithAuth('http://localhost:5000/api/tables/poker', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(lobbyData)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Błąd podczas tworzenia lobby');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.id_stolu) {
-                    // Zamknij modal
                     document.getElementById('create-lobby-modal').style.display = 'none';
-                    // Wyczyść formularz
                     document.getElementById('create-lobby-form').reset();
-                    // Odśwież listę lobby
+                    
+                    joinPokerTable(data.id_stolu);
+                    
                     fetchPokerLobbies();
-                    alert('Lobby zostało utworzone pomyślnie!');
-                } else {
-                    alert('Błąd podczas tworzenia lobby: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('Błąd tworzenia lobby:', error);
-                alert('Wystąpił błąd podczas tworzenia lobby. Spróbuj ponownie.');
+                alert(error.message || 'Wystąpił błąd podczas tworzenia lobby. Spróbuj ponownie.');
+            });
+        }
+
+        function joinPokerTable(tableId) {
+            fetchWithAuth('http://localhost:5000/api/tables/poker/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id_stolu: tableId
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Wystąpił błąd podczas dołączania do stołu');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Dołączyłeś do stołu!');
+                // tutaj będzie przekierowanie do strony gry, jak taka powstanie
+            })
+            .catch(error => {
+                alert(error.message);
             });
         }
     </script>
-    
-    <style>
-        /* Dodatkowe style dla strony z lobby */
-        .lobby-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        
-        .lobby-container h1 {
-            text-align: center;
-            color: #d4af37;
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 30px;
-        }
-        
-        .lobby-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        
-        .lobby-list {
-            background-color: #15273f;
-            padding: 20px;
-            border: 1px solid #2c3e50;
-        }
-        
-        #poker-lobbies {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        #poker-lobbies th, #poker-lobbies td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #2c3e50;
-        }
-        
-        #poker-lobbies th {
-            background-color: #0a0a0a;
-            color: #d4af37;
-            font-weight: bold;
-        }
-        
-        #poker-lobbies tr:hover {
-            background-color: #1c3550;
-        }
-        
-        .join-btn {
-            padding: 8px 15px;
-            background-color: #b8860b;
-            color: #000;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        
-        .join-btn:hover {
-            background-color: #d4af37;
-        }
-        
-        #no-lobbies-message {
-            text-align: center;
-            padding: 20px;
-            color: #b3c9e0;
-        }
-        
-        /* Style dla modalu */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        
-        .modal-content {
-            background-color: #15273f;
-            margin: 5% auto;
-            padding: 30px;
-            border: 1px solid #2c3e50;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            position: relative;
-        }
-        
-        .close {
-            position: absolute;
-            right: 20px;
-            top: 10px;
-            color: #d4af37;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .close:hover {
-            color: #b8860b;
-        }
-        
-        /* Style dla formularzy w modalu */
-        select {
-            width: 100%;
-            padding: 12px;
-            background-color: #0c1c2c;
-            border: 1px solid #2c3e50;
-            color: #e8d6b3;
-            font-size: 16px;
-            appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg fill="%23d4af37" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 10px top 50%;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            margin-right: 10px;
-            width: 18px;
-            height: 18px;
-        }
-        
-        .checkbox-group label {
-            margin-bottom: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .lobby-actions {
-                flex-direction: column;
-            }
-            
-            .lobby-actions .btn {
-                margin-bottom: 10px;
-                width: 100%;
-            }
-            
-            #poker-lobbies {
-                font-size: 14px;
-            }
-            
-            #poker-lobbies th, #poker-lobbies td {
-                padding: 8px;
-            }
-            
-            .modal-content {
-                margin: 10% auto;
-                padding: 20px;
-            }
-        }
-    </style>
 </body>
 </html>

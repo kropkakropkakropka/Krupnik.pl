@@ -4,63 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krupnik.pl</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .error {
-            color: red;
-            margin-bottom: 15px;
-        }
-        .links {
-            text-align: center;
-            margin-top: 15px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body>
     <div class="container">
@@ -78,7 +23,7 @@
                 <input type="password" id="password" name="password" required>
             </div>
             
-            <button type="submit">Zaloguj się</button>
+            <button type="submit" id="submit-btn">Zaloguj się</button>
         </form>
         
         <div class="links">
@@ -86,32 +31,35 @@
         </div>
     </div>
 
+    <script src="/js/auth.js"></script>
     <script>
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        document.addEventListener('DOMContentLoaded', function() {
+            if (isAuthenticated()) {
+                window.location.href = 'index.html';
+            }
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const loginForm = document.getElementById('login-form');
+            const errorMessage = document.getElementById('error-message');
+            const submitButton = document.getElementById('submit-btn');
             
-            fetch('http://localhost:5000/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'Zalogowano pomyślnie') {
-                    localStorage.setItem('user', JSON.stringify(data.user));
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                errorMessage.textContent = '';
+                submitButton.disabled = true;
+                submitButton.textContent = 'Logowanie...';
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                try {
+                    await login(email, password);
                     window.location.href = 'index.html';
-                } else {
-                    document.getElementById('error-message').textContent = data.message;
+                } catch (error) {
+                    errorMessage.textContent = error.message || 'Wystąpił błąd podczas logowania. Spróbuj ponownie.';
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Zaloguj się';
                 }
-            })
-            .catch(error => {
-                document.getElementById('error-message').textContent = 'Wystąpił błąd. Spróbuj ponownie.';
-                console.error('Error:', error);
             });
         });
     </script>

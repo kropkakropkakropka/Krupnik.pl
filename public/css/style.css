@@ -1,9 +1,6 @@
-/* Vintage Casino Style CSS */
 
-/* Import czcionek */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap');
 
-/* Reset i podstawowe style */
 * {
   margin: 0;
   padding: 0;
@@ -14,11 +11,10 @@ body {
   font-family: 'Roboto Slab', serif;
   background-color: #0c1c2c;
   color: #e8d6b3;
-  background-image: url('https://www.transparenttextures.com/patterns/black-felt.png');
+  background-image: url('../img/black-felt.png');
   line-height: 1.6;
 }
 
-/* Nagłówek (header) */
 header {
   background-color: #0a0a0a;
   border-bottom: 4px solid #b8860b;
@@ -34,7 +30,9 @@ nav {
   margin: 0 auto;
   padding: 15px 20px;
 }
-
+#user-points{
+  margin-left: 20px;
+}
 .logo {
   font-family: 'Playfair Display', serif;
   font-size: 32px;
@@ -76,17 +74,12 @@ nav {
   width: 100%;
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-}
 
-/* Hero section */
 .hero {
   text-align: center;
   padding: 80px 20px;
   background-color: rgba(10, 10, 10, 0.8);
-  background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png');
+  background-image: url('../img/dark-leather.png');
   border-bottom: 4px solid #b8860b;
   position: relative;
 }
@@ -220,7 +213,7 @@ nav {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://www.transparenttextures.com/patterns/black-felt.png');
+  background-image: url('../img/black-felt.png');
   opacity: 0.1;
   z-index: 0;
 }
@@ -258,7 +251,6 @@ nav {
   font-size: 16px;
 }
 
-/* Elementy formularza */
 .container {
   max-width: 500px;
   margin: 80px auto;
@@ -266,7 +258,7 @@ nav {
   padding: 30px;
   border: 1px solid #2c3e50;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-  background-image: url('https://www.transparenttextures.com/patterns/black-felt.png');
+  background-image: url('../img/black-felt.png');
   position: relative;
 }
 
@@ -512,4 +504,158 @@ footer::before {
 
 .game-card:hover::after {
   opacity: 0.5;
+}
+
+.lobby-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.lobby-container h1 {
+  text-align: center;
+  color: #d4af37;
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 30px;
+}
+
+.lobby-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.lobby-list {
+  background-color: #15273f;
+  padding: 20px;
+  border: 1px solid #2c3e50;
+}
+
+#poker-lobbies {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#poker-lobbies th, #poker-lobbies td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #2c3e50;
+}
+
+#poker-lobbies th {
+  background-color: #0a0a0a;
+  color: #d4af37;
+  font-weight: bold;
+}
+
+#poker-lobbies tr:hover {
+  background-color: #1c3550;
+}
+
+.join-btn {
+  padding: 8px 15px;
+  background-color: #b8860b;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.join-btn:hover {
+  background-color: #d4af37;
+}
+
+#no-lobbies-message {
+  text-align: center;
+  padding: 20px;
+  color: #b3c9e0;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  background-color: #15273f;
+  margin: 5% auto;
+  padding: 30px;
+  border: 1px solid #2c3e50;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  color: #d4af37;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #b8860b;
+}
+
+select {
+  width: 100%;
+  padding: 12px;
+  background-color: #0c1c2c;
+  border: 1px solid #2c3e50;
+  color: #e8d6b3;
+  font-size: 16px;
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .lobby-actions {
+      flex-direction: column;
+  }
+  
+  .lobby-actions .btn {
+      margin-bottom: 10px;
+      width: 100%;
+  }
+  
+  #poker-lobbies {
+      font-size: 14px;
+  }
+  
+  #poker-lobbies th, #poker-lobbies td {
+      padding: 8px;
+  }
+  
+  .modal-content {
+      margin: 10% auto;
+      padding: 20px;
+  }
 }
