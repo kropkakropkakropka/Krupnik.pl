@@ -1,0 +1,515 @@
+/* Vintage Casino Style CSS */
+
+/* Import czcionek */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap');
+
+/* Reset i podstawowe style */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto Slab', serif;
+  background-color: #0c1c2c;
+  color: #e8d6b3;
+  background-image: url('https://www.transparenttextures.com/patterns/black-felt.png');
+  line-height: 1.6;
+}
+
+/* Nagłówek (header) */
+header {
+  background-color: #0a0a0a;
+  border-bottom: 4px solid #b8860b;
+  padding: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px 20px;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #d4af37;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  display: flex;
+}
+
+.nav-links a {
+  color: #e8d6b3;
+  text-decoration: none;
+  margin-left: 25px;
+  font-size: 18px;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.nav-links a:hover {
+  color: #d4af37;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #d4af37;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+/* Hero section */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: rgba(10, 10, 10, 0.8);
+  background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png');
+  border-bottom: 4px solid #b8860b;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #0a0a0a, #d4af37, #0a0a0a);
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 20px;
+  color: #d4af37;
+  font-size: 48px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  letter-spacing: 2px;
+}
+
+.hero p {
+  margin-bottom: 30px;
+  color: #e8d6b3;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 18px;
+}
+
+/* Przyciski */
+.btn {
+  display: inline-block;
+  padding: 12px 25px;
+  background-color: #b8860b;
+  color: #000;
+  text-decoration: none;
+  border-radius: 0;
+  margin-right: 15px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  border: 1px solid #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background-color: #d4af37;
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+.btn:hover {
+  color: #000;
+}
+
+.btn:hover::after {
+  height: 100%;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #d4af37;
+  color: #d4af37;
+}
+
+.btn-outline:hover {
+  color: #000;
+}
+
+/* Lista gier */
+.game-list {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.game-list h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #d4af37;
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  letter-spacing: 1px;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.game-list h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #d4af37, transparent);
+}
+
+.games {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.game-card {
+  width: 30%;
+  background-color: #15273f;
+  overflow: hidden;
+  margin-bottom: 40px;
+  transition: transform 0.3s ease;
+  border: 1px solid #2c3e50;
+  position: relative;
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://www.transparenttextures.com/patterns/black-felt.png');
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.game-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.game-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 3px solid #b8860b;
+  position: relative;
+}
+
+.game-card-content {
+  padding: 25px;
+  position: relative;
+  z-index: 1;
+}
+
+.game-card h3 {
+  margin-top: 0;
+  color: #d4af37;
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.game-card p {
+  color: #b3c9e0;
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+/* Elementy formularza */
+.container {
+  max-width: 500px;
+  margin: 80px auto;
+  background-color: #15273f;
+  padding: 30px;
+  border: 1px solid #2c3e50;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  background-image: url('https://www.transparenttextures.com/patterns/black-felt.png');
+  position: relative;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #0a0a0a, #d4af37, #0a0a0a);
+}
+
+h2 {
+  text-align: center;
+  color: #d4af37;
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #e8d6b3;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #0c1c2c;
+  border: 1px solid #2c3e50;
+  color: #e8d6b3;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #d4af37;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #b8860b;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #d4af37;
+}
+
+.error {
+  color: #e74c3c;
+  margin-bottom: 20px;
+  border-left: 3px solid #e74c3c;
+  padding-left: 10px;
+}
+
+.success {
+  color: #2ecc71;
+  margin-bottom: 20px;
+  border-left: 3px solid #2ecc71;
+  padding-left: 10px;
+}
+
+.links {
+  text-align: center;
+  margin-top: 25px;
+  color: #b3c9e0;
+}
+
+.links a {
+  color: #d4af37;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* Punkty użytkownika */
+.points {
+  color: #d4af37;
+  font-weight: bold;
+  margin-right: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 5px 10px;
+  border-radius: 0;
+  border: 1px solid #b8860b;
+}
+
+/* Przycisk wylogowania */
+.logout-btn {
+  color: #000;
+  background-color: #b8860b;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #d4af37;
+}
+
+/* Stopka */
+footer {
+  text-align: center;
+  padding: 30px;
+  background-color: #0a0a0a;
+  color: #b3c9e0;
+  border-top: 4px solid #b8860b;
+  font-size: 16px;
+}
+
+footer p {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Responsywność */
+@media (max-width: 900px) {
+  .game-card {
+    width: 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 36px;
+  }
+  
+  nav {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .nav-links {
+    margin-top: 15px;
+  }
+  
+  .nav-links a {
+    margin: 0 10px;
+  }
+  
+  .game-list h2 {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .game-card {
+    width: 100%;
+  }
+  
+  .container {
+    margin: 40px 20px;
+  }
+  
+  .hero h1 {
+    font-size: 28px;
+  }
+  
+  .hero p {
+    font-size: 16px;
+  }
+  
+  .btn {
+    display: block;
+    margin-bottom: 15px;
+    margin-right: 0;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+  }
+  
+  .nav-links a {
+    margin: 5px 0;
+  }
+}
+
+/* Animacje i efekty */
+@keyframes goldPulse {
+  0% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+  50% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
+  100% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+}
+
+.logo {
+  animation: goldPulse 2s infinite;
+}
+
+/* Roulette wheel decoration for footer */
+footer::before {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 20px;
+  background-image: radial-gradient(circle, #d4af37 10%, #0a0a0a 70%);
+  border-radius: 50%;
+  border: 2px solid #b8860b;
+  position: relative;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Dodatki do kart gier */
+.game-card::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: #d4af37;
+  opacity: 0.2;
+  border-radius: 50%;
+  transition: opacity 0.3s ease;
+}
+
+.game-card:hover::after {
+  opacity: 0.5;
+}
