@@ -271,4 +271,53 @@ router.get('/poker/:id/players-count', (req, res) => {
     }
   );
 });
+
+router.get('/poker/:id', authenticateUser, (req, res) => {
+  const tableId = req.params.id;
+  
+  db.query(
+    'SELECT * FROM stoly_poker WHERE id_stolu = ? AND czy_aktywny = TRUE',
+    [tableId],
+    (err, results) => {
+      if (err) {
+        console.error('Błąd zapytania:', err);
+        return res.status(500).json({ message: 'Błąd serwera' });
+      }
+      
+      if (results.length === 0) {
+        return res.status(404).json({ message: 'Stół nie istnieje lub nie jest aktywny' });
+      }
+      
+      res.json(results[0]);
+    }
+  );
+});
+
+// Pobieranie graczy przy stole
+router.get('/poker/:id/players', (req, res) => {
+  const tableId = req.params.id;
+  
+  db.query(
+    `SELECT gp.pozycja_siedzenia, u.nazwa_uzytkownika, u.id_uzytkownika, gp.czy_aktywny
+     FROM gracze_poker gp
+     JOIN uzytkownicy u ON gp.id_uzytkownika = u.id_uzytkownika
+     WHERE gp.id_stolu = ? AND gp.czy_aktywny = TRUE`,
+    [tableId],
+    (err, results) => {
+      if (err) {
+        console.error('Błąd zapytania:', err);
+        return res.status(500).json({ message: 'Błąd serwera' });
+      }
+      
+      // Dodaj stack i bet (te wartości będą zarządzane przez silnik gry)
+      const players = results.map(player => ({
+        ...player,
+        stack: 1000, // Przykładowa wartość
+        bet: 0
+      }));
+      
+      res.json(players);
+    }
+  );
+});
 module.exports = router;

@@ -54,7 +54,9 @@ nav {
   transition: color 0.3s ease;
   position: relative;
 }
-
+#username{
+  cursor: pointer;
+}
 .nav-links a:hover {
   color: #d4af37;
 }

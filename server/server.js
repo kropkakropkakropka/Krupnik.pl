@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-
+const websocketServer = require('./websocket')
 // Import tras
 const authRoutes = require('./routes/auth');
 const tablesRoutes = require('./routes/tables');

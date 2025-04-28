@@ -18,7 +18,7 @@
                     <a href="register.html">Rejestracja</a>
                 </div>
                 <div id="user-info" class="user-info">
-                    <a id="username">Użytkownik</a>
+                    <a id="username">Moje konto</a>
                     <span id="user-points" class="points">0 punktów</span>
                     <a id="logout-btn" class="logout-btn">Wyloguj</a>
                 </div>
@@ -87,7 +87,7 @@
                 
                 document.getElementById('auth-links').style.display = 'none';
                 document.getElementById('user-info').style.display = 'block';
-                document.getElementById('username').textContent = userData.username;
+                document.getElementById('username').textContent = "Moje konto";
                 document.getElementById('user-points').textContent = userData.points + ' punktów';
                 document.getElementById('hero-buttons').style.display = 'none';
                 

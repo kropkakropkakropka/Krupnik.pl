@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Texas Hold'em - Krupnik</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/poker-table.css">
+    <script src="https://cdn.jsdelivr.net/npm/card-deck@1.0.1/dist/card-deck.min.js"></script>
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Krupnik</div>
+            <div class="nav-links">
+                <a href="/index.html">Start</a>
+                <a href="/games/poker-lobby.html">Powrót do lobby</a>
+                <div id="user-info" class="user-info">
+                    <span id="user-points" class="points">0 punktów</span>
+                    <span id="username">Użytkownik</span>
+                    <button id="logout-btn" class="logout-btn">Wyloguj</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="poker-game-container">
+        <div class="game-info">
+            <div class="table-info">
+                <h2 id="table-name">Stół pokerowy</h2>
+                <div id="blinds-info">Blindy: <span id="small-blind">5</span>/<span id="big-blind">10</span></div>
+                <div id="pot-info">Pula: <span id="pot">0</span></div>
+            </div>
+            
+            <div class="game-actions">
+                <button id="fold-btn" class="action-btn fold-btn" disabled>Fold</button>
+                <button id="check-btn" class="action-btn check-btn" disabled>Check</button>
+                <button id="call-btn" class="action-btn call-btn" disabled>Call <span id="call-amount">0</span></button>
+                <button id="raise-btn" class="action-btn raise-btn" disabled>Raise</button>
+                <div id="raise-controls" class="raise-controls" style="display: none;">
+                    <input type="range" id="raise-slider" min="0" max="100" value="0">
+                    <input type="number" id="raise-amount" min="0" step="10" value="0">
+                    <button id="confirm-raise-btn">Zatwierdź</button>
+                    <button id="cancel-raise-btn">Anuluj</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="poker-table">
+            <div class="community-cards">
+                <div id="flop-1" class="card card-placeholder"></div>
+                <div id="flop-2" class="card card-placeholder"></div>
+                <div id="flop-3" class="card card-placeholder"></div>
+                <div id="turn" class="card card-placeholder"></div>
+                <div id="river" class="card card-placeholder"></div>
+            </div>
+            
+            <div class="player-seats">
+                <div id="seat-1" class="player-seat">
+                    <div class="player-info">
+                        <div class="player-name">Wolne miejsce</div>
+                        <div class="player-stack"></div>
+                        <div class="player-bet"></div>
+                    </div>
+                    <div class="player-cards">
+                        <div class="card card-back"></div>
+                        <div class="card card-back"></div>
+                    </div>
+                </div>
+                
+                <!-- Miejsca dla pozostałych graczy (2-9) -->
+                <div id="seat-2" class="player-seat"></div>
+                <div id="seat-3" class="player-seat"></div>
+                <div id="seat-4" class="player-seat"></div>
+                <div id="seat-5" class="player-seat"></div>
+                <div id="seat-6" class="player-seat"></div>
+                <div id="seat-7" class="player-seat"></div>
+                <div id="seat-8" class="player-seat"></div>
+                <div id="seat-9" class="player-seat"></div>
+            </div>
+        </div>
+        
+        <div class="game-chat">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="chat-input-field" placeholder="Napisz wiadomość...">
+                <button id="send-message-btn">Wyślij</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Krupnik. Wszystkie prawa zastrzeżone.</p>
+    </footer>
+    
+    <script src="/js/auth.js"></script>
+    <script src="/js/poker-game.js"></script>
+</body>
+</html>

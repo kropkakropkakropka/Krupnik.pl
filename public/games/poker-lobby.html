@@ -264,6 +264,7 @@
             });
         }
 
+        // Funkcja dołączająca do stołu pokerowego
         function joinPokerTable(tableId) {
             fetchWithAuth('http://localhost:5000/api/tables/poker/join', {
                 method: 'POST',
@@ -283,10 +284,16 @@
                 return response.json();
             })
             .then(data => {
-                alert('Dołączyłeś do stołu!');
-                // tutaj będzie przekierowanie do strony gry, jak taka powstanie
+                console.log('Odpowiedź z serwera:', data); // Dodaj dla debugowania
+                
+                // Upewnij się, że data.position istnieje
+                const position = data.position || 1;
+                
+                // Przekierowanie do strony gry
+                window.location.href = `/games/poker-game.html?table=${tableId}&position=${position}`;
             })
             .catch(error => {
+                console.error('Błąd dołączania:', error); // Dodaj dla debugowania
                 alert(error.message);
             });
         }
